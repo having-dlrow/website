@@ -44,11 +44,11 @@ check-headers-file:
 	scripts/check-headers-file.sh
 
 production-build: module-check ## Build the production site and ensure that noindex headers aren't added
-	hugo --cleanDestinationDir --minify --templateMetrics --environment production
+	hugo --cleanDestinationDir --minify --templateMetrics --templateMetricsHints --environment production
 	HUGO_ENV=production $(MAKE) check-headers-file
 
 non-production-build: module-check ## Build the non-production site, which adds noindex headers to prevent indexing
-	hugo --cleanDestinationDir --enableGitInfo --templateMetrics --environment nonprod
+	hugo --cleanDestinationDir --enableGitInfo --templateMetrics --templateMetricsHints --environment nonprod
 
 serve: module-check ## Boot the development server.
 	hugo server --buildFuture --environment development
