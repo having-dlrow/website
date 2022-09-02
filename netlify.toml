@@ -10,6 +10,8 @@ command = "git submodule update --init --recursive --depth 1 && make non-product
 NODE_VERSION = "10.20.0"
 HUGO_VERSION = "0.101.0"
 RUBY_VERSION = "3.0.1"
+# set TERM variable for terminal output
+TERM = "xterm"
 
 [context.production.environment]
 HUGO_BASEURL = "https://kubernetes.io/"
@@ -27,3 +29,13 @@ command = "git submodule update --init --recursive --depth 1 && make non-product
 # DO NOT REMOVE THIS (contact @kubernetes/sig-docs-leads)
 publish = "public"
 command = "git submodule update --init --recursive --depth 1 && make production-build"
+
+[[plugins]]
+  # runs Cypress tests against the deployed URL
+  package = "netlify-plugin-cypress"
+
+  [plugins.inputs.postBuild]
+    enable = false
+
+  [plugins.inputs]
+    enable = false
