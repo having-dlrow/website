@@ -9,7 +9,7 @@ CONTAINER_ENGINE ?= docker
 IMAGE_REGISTRY ?= gcr.io/k8s-staging-sig-docs
 IMAGE_VERSION=$(shell scripts/hash-files.sh Dockerfile Makefile | cut -c 1-12)
 CONTAINER_IMAGE   = $(IMAGE_REGISTRY)/k8s-website-hugo:v$(HUGO_VERSION)-$(IMAGE_VERSION)
-CONTAINER_RUN     = "$(CONTAINER_ENGINE)" run --rm --interactive --tty --volume "$(CURDIR):/src"
+CONTAINER_RUN     = "$(CONTAINER_ENGINE)" run --rm --interactive --tty --volume "/$(pwd -W):/src"
 
 CCRED=\033[0;31m
 CCEND=\033[0m
@@ -48,7 +48,7 @@ production-build: module-check ## Build the production site and ensure that noin
 	HUGO_ENV=production $(MAKE) check-headers-file
 
 non-production-build: module-check ## Build the non-production site, which adds noindex headers to prevent indexing
-	cat /sys/fs/cgroup/cpuacct/cpuacct.usage & cat /sys/fs/cgroup/memory/memory.usage_in_bytes  | awk '{ byte =$1 /1024/1024; print byte " MB" }' & hugo --cleanDestinationDir --enableGitInfo --environment nonprod
+	ls -al /sys/fs/cgroup/cpu,cpuacct/ & cat /sys/fs/cgroup/cpuacct/cpuacct.usage & cat /sys/fs/cgroup/memory/memory.usage_in_bytes  | awk '{ byte =$1 /1024/1024; print byte " MB" }' & hugo --cleanDestinationDir --enableGitInfo --environment nonprod
 
 serve: module-check ## Boot the development server.
 	hugo server --buildFuture --environment development
@@ -75,7 +75,7 @@ container-push: container-image ## Push container image for the preview of the w
 	$(CONTAINER_ENGINE) push $(CONTAINER_IMAGE)
 
 container-build: module-check
-	$(CONTAINER_RUN) --read-only --mount type=tmpfs,destination=/tmp,tmpfs-mode=01777 $(CONTAINER_IMAGE) sh -c "npm ci && hugo --minify --environment development"
+	$(CONTAINER_RUN) --read-only --mount "type=tmpfs,destination="/$(tmp)",tmpfs-mode=01777" $(CONTAINER_IMAGE) sh -c "npm ci && hugo --minify --environment development"
 
 # no build lock to allow for read-only mounts
 container-serve: module-check ## Boot the development server using container.
