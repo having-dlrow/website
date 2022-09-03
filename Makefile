@@ -48,7 +48,7 @@ production-build: module-check ## Build the production site and ensure that noin
 	HUGO_ENV=production $(MAKE) check-headers-file
 
 non-production-build: module-check ## Build the non-production site, which adds noindex headers to prevent indexing
-	cat /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_quota_us & cat /sys/fs/cgroup/cpu,cpuacct/cpu.shares & cat /sys/fs/cgroup/memory/memory.limit_in_bytes & hugo --cleanDestinationDir --enableGitInfo --environment nonprod
+	cat /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_quota_us && cat /sys/fs/cgroup/cpu,cpuacct/cpu.shares && cat /sys/fs/cgroup/memory/memory.limit_in_bytes & hugo --cleanDestinationDir --enableGitInfo --environment nonprod
 
 serve: module-check ## Boot the development server.
 	hugo server --buildFuture --environment development
