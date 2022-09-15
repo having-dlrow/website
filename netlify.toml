@@ -33,3 +33,4 @@ command = "git submodule update --init --recursive --depth 1 && make production-
 [[plugins]]
   # runs Cypress tests against the deployed URL
   package = "netlify-plugin-cypress"
+  package = "netlify-plugin-debug-cache"
