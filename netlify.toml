@@ -39,3 +39,6 @@ command = "git submodule update --init --recursive --depth 1 && make production-
 
   [plugins.inputs]
     enable = false
+
+[[plugins]]
+  package = "netlify-plugin-debug-cache"
